@@ -1,27 +1,40 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Text, View, StyleSheet, ScrollView, Alert } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
 
-import { Field, Button } from '../'
+import { Field, Button } from '..'
 
 // utils
 import { fields } from './fixtures'
 
 // types
+import { Appointment, NewAppointment } from '../../types/global.d'
 interface Props {
   closeModal: () => void
+  addNewAppointment: (appointment: Appointment) => Promise<void>
+  updateAppointment: (appointment: Appointment) => void
+  initialValues?: Appointment
 }
 
 const canBeEmpty = new Set(['phone'])
 
-export function AddAppointmentForm({ closeModal }: Props) {
-  const [formValues, setFormValues] = useState<Record<string, string>>({
-    date: new Date().toISOString(),
-    email: '',
-    ownerName: '',
-    petName: '',
-    phone: '',
-    symptoms: ''
-  })
+const initialFormValues = {
+  date: new Date().toISOString(),
+  email: '',
+  ownerName: '',
+  petName: '',
+  phone: '',
+  symptoms: ''
+}
+
+export function AppointmentForm({
+  closeModal,
+  addNewAppointment,
+  initialValues,
+  updateAppointment
+}: Props) {
+  const [formValues, setFormValues] = useState<NewAppointment>(
+    initialValues ?? initialFormValues
+  )
 
   const someFieldIsEmpty = useMemo(() => {
     return Object.entries(formValues).some(([key, value]) => {
@@ -33,11 +46,18 @@ export function AddAppointmentForm({ closeModal }: Props) {
     setFormValues((prevValues) => ({ ...prevValues, [field]: value }))
   }, [])
 
-  const handleSubmit = useCallback(() => {
-    if (someFieldIsEmpty) return
-    Alert.alert('Cita agendada', 'La cita ha sido agendada correctamente')
+  const handleSubmit = useCallback(async () => {
+    initialValues
+      ? updateAppointment({ ...formValues, id: initialValues.id })
+      : addNewAppointment({ ...formValues, id: Date.now() })
     closeModal()
-  }, [closeModal, someFieldIsEmpty])
+  }, [
+    closeModal,
+    addNewAppointment,
+    formValues,
+    initialValues,
+    updateAppointment
+  ])
 
   return (
     <View style={styles.container}>
@@ -113,4 +133,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AddAppointmentForm
+export default AppointmentForm
