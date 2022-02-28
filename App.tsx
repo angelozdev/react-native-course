@@ -1,38 +1,41 @@
 import React, { useCallback, useState } from 'react'
-import {
-  FlatList,
-  Modal,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import { AppointmentForm, Appointement, Button } from './src/components'
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { AppointmentForm, Appointement, Button, Modal } from './src/components'
+import AppointmentInfo from './src/components/AppointmentInfo/AppointmentInfo'
 
 // utils
 import { Appointment } from './src/types/global'
 
-function App() {
-  const [isModalOpened, setIsModalOpened] = useState(false)
-  const [appointments, setAppointements] = useState<Appointment[]>([])
-  const [updatedAppointment, setUpdatedAppointment] = useState<Appointment>()
+//types
+type Modals = 'appointmentForm' | 'appointmentInfo'
 
-  const openModal = useCallback(() => {
-    setIsModalOpened(true)
-  }, [])
+function App() {
+  const [isModalOpened, setIsModalOpened] = useState<Modals | null>(null)
+  const [appointments, setAppointements] = useState<Appointment[]>([])
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null)
 
   const closeModal = useCallback(() => {
-    setIsModalOpened(false)
-    setUpdatedAppointment(undefined)
+    setIsModalOpened(null)
+    setSelectedAppointment(null)
   }, [])
 
   const openEditModal = useCallback(
     (id: Appointment['id']) => {
       const appointment = appointments.find((a) => id === a.id)
-      setUpdatedAppointment(appointment)
-      openModal()
+      setSelectedAppointment(appointment)
+      setIsModalOpened('appointmentForm')
     },
-    [openModal, appointments]
+    [setIsModalOpened, appointments]
+  )
+
+  const openAppointmentInfoModal = useCallback(
+    (id: Appointment['id']) => {
+      const appointment = appointments.find((a) => id === a.id)
+      setSelectedAppointment(appointment)
+      setIsModalOpened('appointmentInfo')
+    },
+    [appointments]
   )
 
   const addNewAppointment = useCallback(
@@ -73,23 +76,27 @@ function App() {
         </Text>
 
         <View>
-          <Button onPress={openModal} color="white" backgroundColor="#6b21a8">
+          <Button
+            onPress={() => setIsModalOpened('appointmentForm')}
+            color="white"
+            backgroundColor="#6b21a8"
+          >
             Nueva Cita
           </Button>
         </View>
 
-        <View style={styles.modalContainer}>
-          <Modal transparent animationType="slide" visible={isModalOpened}>
-            <SafeAreaView style={styles.modalContent}>
-              <AppointmentForm
-                initialValues={updatedAppointment}
-                addNewAppointment={addNewAppointment}
-                updateAppointment={updateAppointment}
-                closeModal={closeModal}
-              />
-            </SafeAreaView>
-          </Modal>
-        </View>
+        <Modal visible={isModalOpened === 'appointmentForm'}>
+          <AppointmentForm
+            initialValues={selectedAppointment}
+            addNewAppointment={addNewAppointment}
+            updateAppointment={updateAppointment}
+            closeModal={closeModal}
+          />
+        </Modal>
+
+        <Modal visible={isModalOpened === 'appointmentInfo'}>
+          <AppointmentInfo closeModal={closeModal} {...selectedAppointment} />
+        </Modal>
 
         <View>
           {appointments.length ? (
@@ -97,6 +104,7 @@ function App() {
               data={appointments}
               renderItem={({ item }) => (
                 <Appointement
+                  onLongPress={() => openAppointmentInfoModal(item.id)}
                   deleteAppointment={deleteAppointment}
                   openEditModal={openEditModal}
                   {...item}
@@ -116,15 +124,6 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22
-  },
-  modalContent: {
-    flex: 1
-  },
   title: {
     textAlign: 'center',
     textTransform: 'uppercase',

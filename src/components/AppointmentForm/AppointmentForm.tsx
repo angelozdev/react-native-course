@@ -63,7 +63,16 @@ export function AppointmentForm({
     <View style={styles.container}>
       <ScrollView>
         <Text style={styles.title}>
-          Nueva <Text style={styles.titleBold}>Cita</Text>
+          {initialValues ? (
+            <>
+              Editar cita para{' '}
+              <Text style={styles.titleBold}>"{formValues.petName}"</Text>
+            </>
+          ) : (
+            <>
+              Nueva <Text style={styles.titleBold}>Cita</Text>
+            </>
+          )}
         </Text>
 
         <Button color="#6b21a8" outline onPress={closeModal}>
@@ -102,7 +111,7 @@ export function AppointmentForm({
         backgroundColor="#6b21a8"
         color="white"
       >
-        Guardar
+        {initialValues ? 'Guardar cambios' : 'Crear cita'}
       </Button>
     </View>
   )
@@ -110,9 +119,6 @@ export function AppointmentForm({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginTop: 30,
     backgroundColor: 'white',
     borderTopStartRadius: 30,
     borderTopEndRadius: 30,
