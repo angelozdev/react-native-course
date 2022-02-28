@@ -75,7 +75,7 @@ function App() {
           <Text style={styles.titleBold}>Veterinaria</Text>
         </Text>
 
-        <View>
+        <View style={styles.addNewAppontmentButtonContainer}>
           <Button
             onPress={() => setIsModalOpened('appointmentForm')}
             color="white"
@@ -144,6 +144,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: '600'
+  },
+  addNewAppontmentButtonContainer: {
+    marginTop: 20
   }
 })
 
