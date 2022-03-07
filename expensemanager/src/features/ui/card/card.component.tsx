@@ -17,6 +17,7 @@ export function Card({ children }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    marginVertical: 8,
     backgroundColor: colors.stone[50],
     borderRadius: 8,
     shadowColor: colors.stone[900],

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase'
   },
   childrenContainer: {
-    transform: [{ translateY: -72 }],
+    transform: [{ translateY: -90 }],
     margin: 16
   },
   content: {
@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
     padding: 16
   },
   hasChildren: {
-    paddingBottom: 72
+    paddingBottom: 90
   }
 })

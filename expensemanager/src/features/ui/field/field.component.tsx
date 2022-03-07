@@ -18,7 +18,9 @@ export function Field({ label, children }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginBottom: 16
+  },
   label: {
     fontSize: 14,
     color: colors.stone[500],
