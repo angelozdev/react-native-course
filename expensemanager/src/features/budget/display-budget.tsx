@@ -1,5 +1,6 @@
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
+import CircularProgress from 'react-native-circular-progress-indicator'
 import { numberToCurrency } from '../../utils'
 
 // utils
@@ -14,11 +15,15 @@ interface Props {
 export function DisplayBudget({ budget, expenseTotal }: Props) {
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        width={250}
-        height={250}
-        source={require('../../assets/grafico.jpg')}
+      <CircularProgress
+        radius={150}
+        value={Number(((expenseTotal / budget) * 100).toFixed(2))}
+        valueSuffix={'%'}
+        activeStrokeWidth={24}
+        inActiveStrokeWidth={20}
+        duration={1000}
+        inActiveStrokeColor={colors.stone[200]}
+        activeStrokeColor={colors.blue[800]}
       />
 
       <View style={styles.content}>

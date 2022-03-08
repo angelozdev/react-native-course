@@ -10,6 +10,7 @@ module.exports = {
           '@pages': './src/pages'
         }
       }
-    ]
+    ],
+    'react-native-reanimated/plugin'
   ]
 }

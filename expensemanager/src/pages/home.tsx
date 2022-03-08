@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 
 // components
 import { Card, Header, Modal } from '@features/ui'
@@ -58,6 +58,22 @@ export function Home() {
     [toggleModal, selectedExpense]
   )
 
+  const deleteExpense = useCallback(() => {
+    Alert.alert('Eliminar gasto', '¿Estás seguro?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar',
+        style: 'destructive',
+        onPress: () => {
+          setExpenses((prevExpenses) =>
+            prevExpenses.filter((exp) => exp.id !== selectedExpense?.id)
+          )
+          toggleModal()
+        }
+      }
+    ])
+  }, [toggleModal, selectedExpense])
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -86,6 +102,7 @@ export function Home() {
           <ExpenseForm
             initialValues={selectedExpense}
             onSubmit={addOrEditExpense}
+            onDelete={deleteExpense}
           />
         </Card>
       </Modal>

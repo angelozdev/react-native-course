@@ -16,9 +16,10 @@ const defaultValues = {
 interface Props {
   onSubmit: (expense: Expense | NewExpense) => void
   initialValues?: Expense
+  onDelete?: () => void
 }
 
-export function ExpenseForm({ onSubmit, initialValues }: Props) {
+export function ExpenseForm({ onSubmit, initialValues, onDelete }: Props) {
   const isEditingMode = !!initialValues
   const [values, setValues] = useState<NewExpense | Expense>({
     ...defaultValues,
@@ -78,14 +79,26 @@ export function ExpenseForm({ onSubmit, initialValues }: Props) {
         </Picker>
       </Field>
 
-      <Button
-        disabled={!getAreValuesValid()}
-        onPress={handleSubmit}
-        color="white"
-        bgColor={isEditingMode ? colors.amber[500] : colors.blue[500]}
-      >
-        {isEditingMode ? 'Editar gasto' : 'Agregar gasto'}
-      </Button>
+      <View style={styles.buttons}>
+        {isEditingMode && onDelete && (
+          <View style={styles.buttonContainer}>
+            <Button color="white" onPress={onDelete} bgColor={colors.red[500]}>
+              Eliminar
+            </Button>
+          </View>
+        )}
+
+        <View style={styles.buttonContainer}>
+          <Button
+            disabled={!getAreValuesValid()}
+            onPress={handleSubmit}
+            color="white"
+            bgColor={isEditingMode ? colors.amber[500] : colors.blue[500]}
+          >
+            {isEditingMode ? 'Editar' : 'Agregar'}
+          </Button>
+        </View>
+      </View>
     </View>
   )
 }
@@ -99,5 +112,13 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     marginTop: 8
   },
-  container: {}
+  container: {},
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  buttonContainer: {
+    flex: 1,
+    marginHorizontal: 8
+  }
 })
