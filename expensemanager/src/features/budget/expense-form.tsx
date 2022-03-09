@@ -71,7 +71,7 @@ export function ExpenseForm({ onSubmit, initialValues, onDelete }: Props) {
           <Picker.Item label="-- Seleccione una categoría --" value="none" />
           <Picker.Item label="Transporte" value="transport" />
           <Picker.Item label="Comida" value="food" />
-          <Picker.Item label="Ocio" value="leisure" />
+          <Picker.Item label="Ocio" value="entertainment" />
           <Picker.Item label="Casa" value="home" />
           <Picker.Item label="Salud" value="health" />
           <Picker.Item label="Suscripciones" value="subscriptions" />

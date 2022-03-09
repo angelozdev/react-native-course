@@ -14,16 +14,15 @@ const imagesByCategory: Record<string, any> = {
   food: require('../../assets/icono_comida.png'),
   health: require('../../assets/icono_salud.png'),
   home: require('../../assets/icono_casa.png'),
-  leisure: require('../../assets/icono_ocio.png'),
+  entertainment: require('../../assets/icono_ocio.png'),
   others: require('../../assets/icono_comida.png'),
-  subscriptions: require('../../assets/icono_suscripciones.png'),
-  transport: require('../../assets/icono_comida.png')
+  subscriptions: require('../../assets/icono_suscripciones.png')
 }
 
 const categories: Record<string, string> = {
   food: 'Comida',
   transport: 'Transporte',
-  leisure: 'Ocio',
+  entertainment: 'Ocio',
   home: 'Casa',
   health: 'Salud',
   others: 'Otros'

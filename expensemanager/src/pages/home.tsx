@@ -8,10 +8,11 @@ import {
   DisplayBudget,
   AddExpenseButton,
   ExpenseForm,
-  BudgetList
+  BudgetList,
+  Filter
 } from '@features/budget'
 import { colors } from '../theme/colors'
-import { Expense, NewExpense } from 'types'
+import { Expense, Filter as TFilter, NewExpense } from 'types'
 import { generateId } from '../utils'
 
 // types
@@ -21,6 +22,7 @@ export function Home() {
   const [budget, setBudget] = useState<number>()
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [selectedExpense, setSelectedExpense] = useState<Expense>()
+  const [filteredExtenses, setFilteredExtenses] = useState<Expense[]>([])
 
   const expenseTotal = useMemo(() => {
     return expenses.reduce((total, expense) => total + expense?.amount, 0)
@@ -74,6 +76,19 @@ export function Home() {
     ])
   }, [toggleModal, selectedExpense])
 
+  const onFilterChange = useCallback(
+    (filters: TFilter[]) => {
+      const newFilteredExtenses = expenses.filter((expense) => {
+        return filters.every((filter) => {
+          if (filter.label === 'category' && filter.value === 'all') return true
+          return expense[filter.label] === filter.value
+        })
+      })
+      setFilteredExtenses(newFilteredExtenses)
+    },
+    [expenses]
+  )
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -87,7 +102,13 @@ export function Home() {
 
         {budget && (
           <View style={styles.content}>
-            <BudgetList selectExpense={selectExpense} expenses={expenses} />
+            <Card>
+              <Filter onChange={onFilterChange} />
+            </Card>
+            <BudgetList
+              selectExpense={selectExpense}
+              expenses={filteredExtenses}
+            />
           </View>
         )}
       </ScrollView>

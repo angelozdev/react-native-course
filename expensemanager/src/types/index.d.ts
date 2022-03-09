@@ -7,3 +7,5 @@ export type Expense = {
 }
 
 export type NewExpense = Omit<Expense, 'id' | 'createdAt'>
+
+type Filter = { value: string; label: 'category' }
