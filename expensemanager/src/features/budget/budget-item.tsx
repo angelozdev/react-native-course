@@ -3,7 +3,7 @@ import React from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { numberToCurrency, timestampToDate } from '../../utils'
 import { Expense } from '../../types/index.d'
-import { colors } from '../../theme/colors'
+import { colors } from '@theme/colors'
 
 // types
 interface Props extends Expense {

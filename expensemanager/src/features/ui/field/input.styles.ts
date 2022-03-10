@@ -1,5 +1,5 @@
 import { ViewStyle } from 'react-native'
-import { colors } from '../../../theme/colors'
+import { colors } from '@theme/colors'
 
 export const inputStyles: ViewStyle = {
   backgroundColor: colors.stone[100],

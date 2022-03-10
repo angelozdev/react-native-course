@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { Field, TextInput, Button } from '@features/ui'
-import { colors } from '../../theme/colors'
+import { colors } from '@theme/colors'
 import { numberToCurrency, currencyToNumber } from '../../utils'
 import { Expense, NewExpense } from 'types'
 

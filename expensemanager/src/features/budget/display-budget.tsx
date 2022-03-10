@@ -2,17 +2,19 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import CircularProgress from 'react-native-circular-progress-indicator'
 import { numberToCurrency } from '../../utils'
+import { Button } from '@features/ui'
 
 // utils
-import { colors } from '../../theme/colors'
+import { colors } from '@theme/colors'
 
 // types
 interface Props {
   budget: number
   expenseTotal: number
+  resetBudget: () => void
 }
 
-export function DisplayBudget({ budget, expenseTotal }: Props) {
+export function DisplayBudget({ budget, expenseTotal, resetBudget }: Props) {
   return (
     <View style={styles.container}>
       <CircularProgress
@@ -27,6 +29,12 @@ export function DisplayBudget({ budget, expenseTotal }: Props) {
       />
 
       <View style={styles.content}>
+        <View style={styles.resetBudgetButton}>
+          <Button onPress={resetBudget} bgColor={colors.red[500]} color="white">
+            Reiniciar presupuesto
+          </Button>
+        </View>
+
         <Text style={styles.label}>
           Presupuesto:{' '}
           <Text style={styles.value}>{numberToCurrency(budget)}</Text>
@@ -71,6 +79,9 @@ const styles = StyleSheet.create({
   value: {
     fontWeight: '500',
     color: colors.stone[900]
+  },
+  resetBudgetButton: {
+    marginBottom: 24
   }
 })
 

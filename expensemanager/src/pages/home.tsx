@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import { Alert, ScrollView, StyleSheet, View } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // components
 import { Card, Header, Modal } from '@features/ui'
@@ -11,9 +12,10 @@ import {
   BudgetList,
   Filter
 } from '@features/budget'
-import { colors } from '../theme/colors'
+import { colors } from '@theme/colors'
 import { Expense, Filter as TFilter, NewExpense } from 'types'
-import { generateId } from '../utils'
+import { generateId } from '@utils'
+import { ASKeys } from '@consts'
 
 // types
 
@@ -23,6 +25,7 @@ export function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [selectedExpense, setSelectedExpense] = useState<Expense>()
   const [filteredExtenses, setFilteredExtenses] = useState<Expense[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const expenseTotal = useMemo(() => {
     return expenses.reduce((total, expense) => total + expense?.amount, 0)
@@ -43,18 +46,23 @@ export function Home() {
 
   const addOrEditExpense = useCallback(
     (expense: Expense | NewExpense) => {
-      if (selectedExpense) {
-        setExpenses((prevExpenses) => {
-          const newExpenses = prevExpenses.map((exp) =>
+      setExpenses((prevExpenses) => {
+        let newExpenses = [...prevExpenses]
+
+        if (selectedExpense) {
+          newExpenses = prevExpenses.map((exp) =>
             exp.id === selectedExpense.id ? (expense as Expense) : exp
           )
-          return newExpenses
-        })
-      } else {
-        const id = generateId()
-        const newExpense: Expense = { ...expense, id, createdAt: Date.now() }
-        setExpenses((prevExpenses) => [newExpense, ...prevExpenses])
-      }
+        } else {
+          const id = generateId()
+          const newExpense: Expense = { ...expense, id, createdAt: Date.now() }
+          newExpenses = [newExpense, ...prevExpenses]
+        }
+
+        AsyncStorage.setItem(ASKeys.EXPENSES, JSON.stringify(newExpenses))
+        return newExpenses
+      })
+
       toggleModal()
     },
     [toggleModal, selectedExpense]
@@ -89,18 +97,74 @@ export function Home() {
     [expenses]
   )
 
+  const resetBudget = useCallback(() => {
+    Alert.alert('Reiniciar presupuesto', '¿Estás seguro?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Reiniciar',
+        style: 'destructive',
+        onPress: () => {
+          AsyncStorage.removeItem(ASKeys.BUDGET)
+          AsyncStorage.removeItem(ASKeys.EXPENSES)
+          setBudget(undefined)
+          setExpenses([])
+        }
+      }
+    ])
+  }, [])
+
+  useEffect(() => {
+    setIsLoading(true)
+    const getBudgetFromAS = async () => {
+      const budgetString = await AsyncStorage.getItem(ASKeys.BUDGET)
+      const budgetNumber = Number(budgetString)
+      if (isNaN(budgetNumber) || budgetNumber <= 0) return
+      return budgetNumber
+    }
+
+    const getExpensesFromAS = async () => {
+      try {
+        const expensesString = await AsyncStorage.getItem(ASKeys.EXPENSES)
+        const expensesFromAS = JSON.parse(expensesString ?? '[]') as Expense[]
+        return expensesFromAS
+      } catch (error) {
+        console.error('[HOME.getExensesFromAS]', error)
+        return []
+      }
+    }
+
+    Promise.all([getBudgetFromAS(), getExpensesFromAS()])
+      .then(([budgetFromAS, expensesFromAS]) => {
+        setBudget(budgetFromAS)
+        setExpenses(expensesFromAS)
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [])
+
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <Text>Cargando...</Text>
+      </View>
+    )
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <Header>
           {budget ? (
-            <DisplayBudget budget={budget} expenseTotal={expenseTotal} />
+            <DisplayBudget
+              resetBudget={resetBudget}
+              budget={budget}
+              expenseTotal={expenseTotal}
+            />
           ) : (
             <AddBudgetForm addBudget={setBudget} />
           )}
         </Header>
 
-        {budget && (
+        {!!budget && (
           <View style={styles.content}>
             <Card>
               <Filter onChange={onFilterChange} />
@@ -128,7 +192,7 @@ export function Home() {
         </Card>
       </Modal>
 
-      {budget && (
+      {!!budget && (
         <View
           style={[styles.floatingButton, isModalOpened ? styles.pressed : {}]}
         >

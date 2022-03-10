@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import { Button, Field, TextInput } from '@features/ui'
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 // utils
-import { colors } from '../../theme/colors'
+import { colors } from '@theme/colors'
 import { numberToCurrency, currencyToNumber } from '../../utils'
+import { ASKeys } from '@consts'
 
 // types
 interface Props {
@@ -13,10 +15,12 @@ interface Props {
 
 export function AddBudgetForm({ addBudget }: Props) {
   const [value, setValue] = useState<number>()
+  const { setItem } = useAsyncStorage(ASKeys.BUDGET)
   const isValueValid = !!value && value >= 1_000
 
   const handleAddBudget = () => {
     if (!value) return
+    setItem(String(value))
     addBudget(value)
   }
 
