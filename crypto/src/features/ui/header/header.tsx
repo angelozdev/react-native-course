@@ -1,24 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'native-base'
 
 export function Header() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Criptomonedas</Text>
+    <View p={3} borderBottomColor="gray.200" borderBottomWidth={1}>
+      <Text fontSize="xl" textAlign="center">
+        Cryptocurrency
+      </Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: 'teal',
-  },
-  title: {
-    color: 'white',
-    fontSize: 24,
-    fontFamily: 'Lato-Regular',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-  },
-})

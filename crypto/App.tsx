@@ -1,42 +1,32 @@
 import React from 'react'
-import { SafeAreaView, Text, StyleSheet, Image, View } from 'react-native'
+import { SafeAreaView } from 'react-native'
+import { NativeBaseProvider, View, Image, ScrollView } from 'native-base'
 import { Header } from '@features/ui'
+import { Form } from '@features/crypto-currency/'
 const banner = require('@assets/img/cryptomonedas.png')
 
 const App = () => {
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
+    <NativeBaseProvider>
+      <SafeAreaView>
         <Header />
+        <ScrollView>
+          <View px={4}>
+            <Image
+              w="full"
+              resizeMode="contain"
+              height="xs"
+              alt="banner"
+              accessibilityIgnoresInvertColors
+              source={banner}
+            />
 
-        <View style={styles.content}>
-          <Image
-            style={styles.banner}
-            accessibilityIgnoresInvertColors
-            source={banner}
-          />
-
-          <Text>Criptomonedas</Text>
-        </View>
-      </View>
-    </SafeAreaView>
+            <Form onValuesChange={console.log} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </NativeBaseProvider>
   )
 }
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: 'Lato-Regular',
-    fontSize: 30,
-  },
-  banner: {
-    width: '100%',
-    height: 180,
-    resizeMode: 'cover',
-  },
-  container: {},
-  content: {
-    marginHorizontal: '2%',
-  },
-})
 
 export default App
