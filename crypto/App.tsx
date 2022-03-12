@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { SafeAreaView } from 'react-native'
 import {
   NativeBaseProvider,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   Box,
+  Spinner,
 } from 'native-base'
 import { Header } from '@features/ui'
 import { Form } from '@features/crypto-currency/'
@@ -21,9 +22,11 @@ const App = () => {
     selectedCrypto: '',
     prices: [],
   })
+  const [isLoading, setIsLoading] = React.useState(false)
 
-  const handleSearchPrice = async ({ cryptocurrency }: Values) => {
+  const handleSearchPrice = useCallback(async ({ cryptocurrency }: Values) => {
     if (!cryptocurrency) return
+    setIsLoading(true)
     const data = await getPrices({ cryptocurrency })
     const prices = Object.entries(data).map<{
       price: number
@@ -33,8 +36,9 @@ const App = () => {
       currency: key as Currencies,
     }))
 
+    setIsLoading(false)
     setInfo({ selectedCrypto: cryptocurrency, prices })
-  }
+  }, [])
 
   return (
     <NativeBaseProvider>
@@ -51,14 +55,29 @@ const App = () => {
               source={banner}
             />
 
-            <Form onSubmit={handleSearchPrice} />
+            <Form
+              isLoading={isLoading}
+              onSubmit={handleSearchPrice}
+              onValuesChange={handleSearchPrice}
+            />
           </View>
-          {!!info.selectedCrypto && (
+          {(!!info.selectedCrypto || isLoading) && (
             <Box mb={20} mt={4} mx={1}>
-              <View bg="blue.600" borderRadius={8} shadow={4} p={4}>
-                <Text fontSize="2xl" fontWeight="bold" mb={2} color="white">
-                  {info.selectedCrypto}
-                </Text>
+              <View bg="purple.700" borderRadius={8} shadow={4} p={4}>
+                {isLoading && (
+                  <Spinner
+                    accessibilityHint="loading prices"
+                    accessibilityLabel="loading prices"
+                    size="lg"
+                    color="white"
+                  />
+                )}
+
+                {!!info.selectedCrypto && (
+                  <Text fontSize="2xl" fontWeight="bold" mb={2} color="white">
+                    {info.selectedCrypto}
+                  </Text>
+                )}
 
                 {info.prices.map(({ currency, price }) => (
                   <Box key={currency}>

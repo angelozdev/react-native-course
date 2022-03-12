@@ -5,28 +5,24 @@ import { getTopCryptoCurrencies } from '@services/cryptocurrencies'
 
 // types
 interface Props {
-  onValuesChange?: (values: Values) => void
-  onSubmit: (values: Values) => void | Promise<void>
+  onValuesChange?: (values: Values) => void | Promise<void>
+  onSubmit?: (values: Values) => void | Promise<void>
+  isLoading?: boolean
 }
 
-export function Form({ onValuesChange, onSubmit }: Props) {
-  const [isLoading, setIsLoading] = useState(false)
+export function Form({ onValuesChange, onSubmit, isLoading = false }: Props) {
   const [values, setValues] = useState<Values>({
     cryptocurrency: '',
   })
 
   const [topCtryptoCurrencies, setTopCryptoCurrencies] = useState<Datum[]>([])
 
-  const handleValuesChange =
-    (name: 'currency' | 'cryptocurrency') => (value: string) => {
-      setValues((prevValues) => ({ ...prevValues, [name]: value }))
-      onValuesChange?.(values)
-    }
+  const handleValuesChange = (name: 'cryptocurrency') => (value: string) => {
+    setValues((prevValues) => ({ ...prevValues, [name]: value }))
+  }
 
   const handleSubmit = async () => {
-    setIsLoading(true)
-    await onSubmit(values)
-    setIsLoading(false)
+    await onSubmit?.(values)
   }
 
   useEffect(() => {
@@ -40,13 +36,14 @@ export function Form({ onValuesChange, onSubmit }: Props) {
       .catch(console.error)
   }, [])
 
+  useEffect(() => {
+    if (!onValuesChange) return
+    onValuesChange(values)
+  }, [values, onValuesChange])
+
   return (
     <Box w="full" py={4}>
-      <FormControl
-        mb={4}
-        isRequired
-        isDisabled={isLoading || !topCtryptoCurrencies.length}
-      >
+      <FormControl mb={4} isRequired isDisabled={!topCtryptoCurrencies.length}>
         <FormControl.Label>Cryptocurrency</FormControl.Label>
         <Select
           _selectedItem={{
@@ -70,18 +67,20 @@ export function Form({ onValuesChange, onSubmit }: Props) {
         </Select>
       </FormControl>
 
-      <Button
-        _loading={{ bg: 'green.600' }}
-        _pressed={{ bg: 'green.700', shadow: 'none' }}
-        bg="green.600"
-        shadow={1}
-        _text={{ textTransform: 'uppercase' }}
-        isDisabled={values.cryptocurrency === '' || isLoading}
-        isLoading={isLoading}
-        onPress={handleSubmit}
-      >
-        Search
-      </Button>
+      {onSubmit && (
+        <Button
+          _loading={{ bg: 'green.600' }}
+          _pressed={{ bg: 'green.700', shadow: 'none' }}
+          bg="green.600"
+          shadow={1}
+          _text={{ textTransform: 'uppercase' }}
+          isDisabled={values.cryptocurrency === '' || isLoading}
+          isLoading={isLoading}
+          onPress={handleSubmit}
+        >
+          Search
+        </Button>
+      )}
     </Box>
   )
 }
