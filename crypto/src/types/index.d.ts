@@ -1,6 +1,21 @@
 type Values = {
-  currency: Currencies | ''
+  cryptocurrency: string
 }
+
+type Currencies =
+  | 'AUD'
+  | 'BRL'
+  | 'CAD'
+  | 'CHF'
+  | 'CNY'
+  | 'COP'
+  | 'EUR'
+  | 'GBP'
+  | 'HKD'
+  | 'JPY'
+  | 'MXN'
+  | 'RUB'
+  | 'USD'
 
 interface Response {
   Message: string
