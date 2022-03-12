@@ -8,7 +8,7 @@ module.exports = {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
         alias: {
           '@features': './src/features',
-          '@assets': './src/assets',
+          '@assets': './assets',
           '@services': './src/services',
         },
       },
