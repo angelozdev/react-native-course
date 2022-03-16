@@ -19,11 +19,11 @@ const canBeEmpty = new Set(['phone'])
 
 const initialFormValues = {
   date: new Date().toISOString(),
-  email: '',
-  ownerName: '',
-  petName: '',
-  phone: '',
-  symptoms: ''
+  email: 'sdfsdf',
+  ownerName: 'sdfdsf',
+  petName: 'sdfsdfdsf',
+  phone: '2312465',
+  symptoms: 'Come mucho'
 }
 
 export function AppointmentForm({

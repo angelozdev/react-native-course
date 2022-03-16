@@ -1,5 +1,14 @@
-import React, { useCallback, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { AppointmentForm, Appointement, Button, Modal } from './src/components'
 import AppointmentInfo from './src/components/AppointmentInfo/AppointmentInfo'
 
@@ -11,9 +20,19 @@ type Modals = 'appointmentForm' | 'appointmentInfo'
 
 function App() {
   const [isModalOpened, setIsModalOpened] = useState<Modals | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [appointments, setAppointements] = useState<Appointment[]>([])
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null)
+
+  useEffect(() => {
+    AsyncStorage.getItem('@appointments')
+      .then(JSON.parse)
+      .then((appointmentsFromAS) => {
+        setAppointements(appointmentsFromAS || [])
+      })
+      .finally(() => setIsLoading(false))
+  }, [])
 
   const closeModal = useCallback(() => {
     setIsModalOpened(null)
@@ -40,85 +59,91 @@ function App() {
 
   const addNewAppointment = useCallback(
     async (newAppointement: Appointment) => {
-      setAppointements((prevAppointments) => [
-        ...prevAppointments,
-        newAppointement
-      ])
+      setAppointements((prevAppointments) => {
+        console.log(prevAppointments)
+
+        const newAppointements = [newAppointement, ...prevAppointments]
+        AsyncStorage.setItem('@appointments', JSON.stringify(newAppointements))
+        return newAppointements
+      })
     },
     []
   )
 
-  const updateAppointment = useCallback(
-    (newAppointement) => {
-      const newAppointements = appointments.filter((appointment) => {
+  const updateAppointment = useCallback((newAppointement) => {
+    setAppointements((prevAppointments) => {
+      const filteredAppointments = prevAppointments.filter((appointment) => {
         return appointment.id !== newAppointement.id
       })
-
-      setAppointements([newAppointement, ...newAppointements])
-    },
-    [appointments]
-  )
+      const newAppointements = [newAppointement, ...filteredAppointments]
+      AsyncStorage.setItem('@appointments', JSON.stringify(newAppointements))
+      return newAppointements
+    })
+  }, [])
 
   const deleteAppointment = useCallback((appointmentId: Appointment['id']) => {
     setAppointements((prevAppointments) => {
-      return prevAppointments.filter(
+      const newAppointements = prevAppointments.filter(
         (appointment) => appointment.id !== appointmentId
       )
+      AsyncStorage.setItem('@appointments', JSON.stringify(newAppointements))
+      return newAppointements
     })
   }, [])
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={styles.title}>
-          Administrador de citas{' '}
-          <Text style={styles.titleBold}>Veterinaria</Text>
-        </Text>
+        <FlatList
+          ListHeaderComponent={
+            <>
+              <Text style={styles.title}>
+                Administrador de citas{' '}
+                <Text style={styles.titleBold}>Veterinaria</Text>
+              </Text>
 
-        <View style={styles.addNewAppontmentButtonContainer}>
-          <Button
-            onPress={() => setIsModalOpened('appointmentForm')}
-            color="white"
-            backgroundColor="#6b21a8"
-          >
-            Nueva Cita
-          </Button>
-        </View>
-
-        <Modal visible={isModalOpened === 'appointmentForm'}>
-          <AppointmentForm
-            initialValues={selectedAppointment}
-            addNewAppointment={addNewAppointment}
-            updateAppointment={updateAppointment}
-            closeModal={closeModal}
-          />
-        </Modal>
-
-        <Modal visible={isModalOpened === 'appointmentInfo'}>
-          <AppointmentInfo closeModal={closeModal} {...selectedAppointment} />
-        </Modal>
-
-        <View>
-          {appointments.length ? (
-            <FlatList
-              data={appointments}
-              renderItem={({ item }) => (
-                <Appointement
-                  onLongPress={() => openAppointmentInfoModal(item.id)}
-                  deleteAppointment={deleteAppointment}
-                  openEditModal={openEditModal}
-                  {...item}
-                />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-            />
-          ) : (
+              <View style={styles.addNewAppontmentButtonContainer}>
+                <Button
+                  onPress={() => setIsModalOpened('appointmentForm')}
+                  color="white"
+                  backgroundColor="#6b21a8"
+                >
+                  Nueva Cita
+                </Button>
+                {isLoading && <ActivityIndicator size="large" color="white" />}
+              </View>
+            </>
+          }
+          data={appointments}
+          ListEmptyComponent={
             <Text style={styles.noAppointmentsMessage}>
-              No hay citas por el momento.
+              No hay citas para mostrar
             </Text>
+          }
+          renderItem={({ item }) => (
+            <Appointement
+              onLongPress={() => openAppointmentInfoModal(item.id)}
+              deleteAppointment={deleteAppointment}
+              openEditModal={openEditModal}
+              {...item}
+            />
           )}
-        </View>
+          keyExtractor={(item) => item.id.toString()}
+        />
       </View>
+
+      <Modal visible={isModalOpened === 'appointmentForm'}>
+        <AppointmentForm
+          initialValues={selectedAppointment}
+          addNewAppointment={addNewAppointment}
+          updateAppointment={updateAppointment}
+          closeModal={closeModal}
+        />
+      </Modal>
+
+      <Modal visible={isModalOpened === 'appointmentInfo'}>
+        <AppointmentInfo closeModal={closeModal} {...selectedAppointment} />
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -146,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   addNewAppontmentButtonContainer: {
-    marginTop: 20
+    marginVertical: 20
   }
 })
 
