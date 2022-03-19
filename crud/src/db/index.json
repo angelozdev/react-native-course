@@ -1,0 +1,52 @@
+{
+  "clients": [
+    {
+      "name": "Angelo Zambrano",
+      "email": "angelozdev@mail.com",
+      "phone": "320584512",
+      "company": "Ubidots",
+      "createdAt": "2022-03-19T16:31:27.066Z",
+      "id": "l0y2htuidqk"
+    },
+    {
+      "name": "Donna Paulsen",
+      "email": "donna.p@maik.com",
+      "phone": "215665454",
+      "company": "Home",
+      "createdAt": "2022-03-19T16:40:57.344Z",
+      "id": "l0y2u1vk3zc"
+    },
+    {
+      "name": "Aileen Xu",
+      "email": "lin@mail.com",
+      "phone": "6545454545",
+      "company": "Home 🎉",
+      "id": "l0y568hlxwe",
+      "createdAt": "2022-03-19T17:46:25.017Z"
+    },
+    {
+      "name": "Melina",
+      "email": "melina@mail.com",
+      "phone": "987897987878",
+      "company": "Home",
+      "id": "l0y5k4jiky",
+      "createdAt": "2022-03-19T17:57:13.086Z"
+    },
+    {
+      "name": "Sr. Gato",
+      "email": "srcat@mail.com",
+      "phone": "879819844849",
+      "company": "Thrid floor",
+      "id": "l0y7tla2sa",
+      "createdAt": "2022-03-19T19:00:33.914Z"
+    },
+    {
+      "name": "Gloria Zambrano",
+      "email": "glo.zam565@gmail.com",
+      "phone": "3434676794",
+      "company": "Independiente",
+      "id": "l0ybtrqpsor",
+      "createdAt": "2022-03-19T20:52:40.754Z"
+    }
+  ]
+}
