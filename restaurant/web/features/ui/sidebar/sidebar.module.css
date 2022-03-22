@@ -1,0 +1,27 @@
+.sidebar_container {
+  @apply p-4 bg-teal-700 md:sticky top-0 md:min-h-screen bottom-0;
+}
+
+.title {
+  @apply text-white text-xl md:text-2xl font-bold;
+}
+
+.navigation {
+  @apply mt-4;
+}
+
+.navigation_list {
+  @apply flex flex-col gap-2;
+}
+
+.navigation_item {
+  @apply cursor-pointer shadow-sm hover:shadow-lg text-white hover:bg-teal-800 bg-teal-600 rounded-lg;
+}
+
+.navigation_link {
+  @apply w-full h-full inline-block py-2 px-3;
+}
+
+.navigation_item.selected {
+  @apply font-bold bg-teal-800 cursor-default hover:shadow-sm;
+}

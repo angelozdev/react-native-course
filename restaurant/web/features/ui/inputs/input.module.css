@@ -1,0 +1,18 @@
+.container {
+}
+
+.content {
+  @apply flex flex-col gap-1;
+}
+
+.input {
+  @apply py-2 px-3 border rounded-md focus:shadow-md w-full bg-white;
+}
+
+.label {
+  @apply text-sm text-gray-700;
+}
+
+.error_message {
+  @apply text-red-800 text-xs leading-4 mt-1;
+}

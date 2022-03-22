@@ -153,6 +153,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('crud.keystore')
+            storePassword 'password1234'
+            keyAlias 'crud_app'
+            keyPassword 'password1234'
+        }
     }
     buildTypes {
         debug {
@@ -169,6 +175,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 

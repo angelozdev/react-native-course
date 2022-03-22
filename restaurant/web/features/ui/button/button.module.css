@@ -1,0 +1,27 @@
+.button {
+  @apply disabled:cursor-not-allowed disabled:opacity-70 p-1 border rounded-md shadow-sm hover:shadow-md transition-all active:scale-[0.98] inline-block;
+}
+
+.text {
+  @apply px-1;
+}
+
+.primary {
+  @apply bg-teal-500 text-white hover:bg-teal-600 focus:bg-teal-600;
+}
+
+.success {
+  @apply bg-green-500 text-white hover:bg-green-600 focus:bg-green-600;
+}
+
+.danger {
+  @apply bg-red-500 text-white hover:bg-red-600 focus:bg-red-600;
+}
+
+.warn {
+  @apply bg-yellow-500 text-white hover:bg-yellow-600 focus:bg-yellow-600;
+}
+
+.info {
+  @apply bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600;
+}

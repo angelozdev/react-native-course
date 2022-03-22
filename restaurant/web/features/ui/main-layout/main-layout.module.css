@@ -1,0 +1,11 @@
+.container {
+  @apply md:flex relative;
+}
+
+.content {
+  @apply flex-grow-[4];
+}
+
+.sidebar {
+  @apply flex-grow md:max-w-xs;
+}

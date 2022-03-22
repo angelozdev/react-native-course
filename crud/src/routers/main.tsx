@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { theme, View } from 'native-base'
+import { theme } from 'native-base'
 import {
   CardStyleInterpolators,
   createStackNavigator,
