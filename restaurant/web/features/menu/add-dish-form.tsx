@@ -36,6 +36,8 @@ export default function AddDishForm() {
   const [error, setError] = React.useState<StructError>();
   const router = useRouter();
   const [isLoading, setIsloading] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const unsubscribe = React.useRef<Function | void>();
 
   const handleChange = ({ target }: Event) => {
     const { value, name } = target;
@@ -56,14 +58,21 @@ export default function AddDishForm() {
 
     setIsloading(true);
 
-    try {
-      const imageURL = values.image ? await uploadImage(values.image) : null;
-      await dishesService.addOne({ ...values, image: imageURL });
-      router.replace(Routes.MENU);
-    } finally {
-      setIsloading(false);
-    }
+    unsubscribe.current = uploadImage(values.image, {
+      onSuccess: async (url) => {
+        await dishesService.addOne({ ...values, image: url });
+        setIsloading(false);
+        router.replace(Routes.MENU);
+      },
+      onProgress: setProgress,
+    });
   };
+
+  React.useEffect(() => {
+    return () => {
+      unsubscribe.current && unsubscribe.current();
+    };
+  }, []);
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
@@ -103,7 +112,12 @@ export default function AddDishForm() {
         label="Image"
         type="file"
         accept="image/*"
+        error={error?.path[0] === "image" && error.message}
       />
+
+      {progress > 0 && (
+        <progress max={100} value={progress} className="w-full" />
+      )}
 
       <Textarea
         onChange={handleChange}

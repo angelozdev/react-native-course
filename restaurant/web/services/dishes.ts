@@ -5,7 +5,7 @@ import {
   getDocs,
   addDoc,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Dish } from "./resourses";
 
 const dishesCollection = collection(db, "dishes") as CollectionReference<Dish>;
@@ -35,17 +35,39 @@ export async function getAll(): Promise<Dish[]> {
   }
 }
 
-export async function uploadImage(image: File): Promise<string> {
-  try {
-    const snapshot = await uploadBytes(
-      ref(storage, "dishes/" + image.name),
-      image
-    );
+export function uploadImage(
+  image: File,
+  {
+    onError,
+    onSuccess,
+    onProgress,
+  }: {
+    onError?: (error: Error) => void;
+    onSuccess?: (url: string) => void;
+    onProgress?: (progress: number) => void;
+  } = {}
+) {
+  if (!image) return onSuccess(null);
 
-    const url = await getDownloadURL(snapshot.ref);
-    return url;
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
+  const uploadTask = uploadBytesResumable(
+    ref(storage, "dishes/" + image.name),
+    image
+  );
+
+  const unsubscribe = uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      onProgress?.((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    },
+    (error) => {
+      console.error(error);
+      onError?.(error);
+    },
+    async () => {
+      const url = await getDownloadURL(uploadTask.snapshot.ref);
+      onSuccess?.(url);
+    }
+  );
+
+  return unsubscribe;
 }
