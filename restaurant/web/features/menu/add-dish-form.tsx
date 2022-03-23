@@ -1,4 +1,4 @@
-import { Button, Input, Select, Textarea } from "@features/ui";
+import { Button, Input, ProgressBar, Select, Textarea } from "@features/ui";
 import React, { ChangeEvent, FormEvent } from "react";
 
 // utils
@@ -60,11 +60,12 @@ export default function AddDishForm() {
 
     unsubscribe.current = uploadImage(values.image, {
       onSuccess: async (url) => {
-        await dishesService.addOne({ ...values, image: url });
+        await dishesService.addOne({ ...values, image: url, available: true });
         setIsloading(false);
+        setProgress(100);
         router.replace(Routes.MENU);
       },
-      onProgress: setProgress,
+      onProgress: (progress) => setProgress(progress - 10),
     });
   };
 
@@ -76,7 +77,7 @@ export default function AddDishForm() {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-      <h1 className="text-2xl">Create Dish</h1>
+      <h1 className="text-2xl font-semibold uppercase">Create Dish</h1>
       <Input
         value={values.name}
         label="Name"
@@ -91,7 +92,6 @@ export default function AddDishForm() {
         min={0}
         name="price"
         onChange={handleChange}
-        step={10}
         label="Price"
         type="number"
         placeholder="$5.000"
@@ -115,9 +115,7 @@ export default function AddDishForm() {
         error={error?.path[0] === "image" && error.message}
       />
 
-      {progress > 0 && (
-        <progress max={100} value={progress} className="w-full" />
-      )}
+      {!!progress && <ProgressBar progress={progress} />}
 
       <Textarea
         onChange={handleChange}

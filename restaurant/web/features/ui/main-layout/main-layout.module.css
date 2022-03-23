@@ -7,5 +7,5 @@
 }
 
 .sidebar {
-  @apply flex-grow md:max-w-xs;
+  @apply flex-grow md:max-w-xs min-w-[300px];
 }

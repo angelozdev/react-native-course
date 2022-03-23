@@ -1,11 +1,18 @@
 import { db, storage } from "firebase-client";
+import { FirebaseError } from "firebase/app";
 import {
   collection,
   CollectionReference,
   getDocs,
   addDoc,
+  onSnapshot,
 } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  StorageError,
+} from "firebase/storage";
 import { Dish } from "./resourses";
 
 const dishesCollection = collection(db, "dishes") as CollectionReference<Dish>;
@@ -35,6 +42,31 @@ export async function getAll(): Promise<Dish[]> {
   }
 }
 
+export async function getAllRT({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (dishes: Dish[]) => void;
+  onError?: (error: FirebaseError) => void;
+}) {
+  const unsubscribe = onSnapshot(
+    dishesCollection,
+    (querySnapshot) => {
+      const dishes = querySnapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+
+      onSuccess(dishes);
+    },
+    (error) => {
+      console.error(error);
+      onError?.(error);
+    }
+  );
+
+  return unsubscribe;
+}
+
 export function uploadImage(
   image: File,
   {
@@ -42,7 +74,7 @@ export function uploadImage(
     onSuccess,
     onProgress,
   }: {
-    onError?: (error: Error) => void;
+    onError?: (error: StorageError) => void;
     onSuccess?: (url: string) => void;
     onProgress?: (progress: number) => void;
   } = {}

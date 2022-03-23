@@ -5,4 +5,5 @@ export interface Dish {
   description: string;
   category: string;
   image: string | null;
+  available: boolean;
 }
