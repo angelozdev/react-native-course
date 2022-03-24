@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./button.module.css";
 
 //types
@@ -7,13 +8,18 @@ interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
   color?: "success" | "danger" | "warn" | "info" | "primary";
 }
 
-export default function Button({ children, className, color, ...rest }: Props) {
+const Anchor = React.forwardRef<HTMLAnchorElement, Props>((props, ref) => {
+  const { children, className, color, ...rest } = props;
   return (
     <a
+      ref={ref}
       className={[styles.button, styles[color], className].join(" ").trim()}
       {...rest}
     >
       <span className={styles.text}>{children}</span>
     </a>
   );
-}
+});
+
+Anchor.displayName = "Anchor";
+export default Anchor;

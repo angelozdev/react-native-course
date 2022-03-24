@@ -1,0 +1,31 @@
+.container {
+  @apply flex items-center justify-center w-full mb-0.5;
+}
+
+.label-container {
+  @apply flex items-center cursor-pointer;
+}
+
+.wrapper {
+  @apply relative;
+}
+
+.input {
+  @apply sr-only;
+}
+
+.pane {
+  @apply w-10 h-4 bg-gray-100 rounded-full shadow-inner;
+}
+
+.dot {
+  @apply absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition;
+}
+
+.label {
+  @apply ml-3 text-gray-700 font-medium;
+}
+
+.input:checked ~ .dot {
+  @apply translate-x-full bg-green-500;
+}

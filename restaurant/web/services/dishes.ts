@@ -6,6 +6,8 @@ import {
   getDocs,
   addDoc,
   onSnapshot,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import {
   ref,
@@ -65,6 +67,19 @@ export async function getAllRT({
   );
 
   return unsubscribe;
+}
+
+export async function updateById(
+  id: Dish["id"],
+  data: Omit<Partial<Dish>, "id">
+) {
+  try {
+    const dishRef = doc(dishesCollection, id);
+    await updateDoc(dishRef, data);
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
 }
 
 export function uploadImage(

@@ -1,0 +1,3 @@
+type RootStackParamList = {
+  NewOrder: undefined
+}
