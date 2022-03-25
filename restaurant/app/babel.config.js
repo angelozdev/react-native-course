@@ -15,8 +15,11 @@ module.exports = {
           '@features': './src/features',
           '@redux': './src/redux',
           '@screens': './src/screens',
+          '@firebase-client': './src/firebase-client',
+          '@services': './src/services',
         },
       },
     ],
+    ['@babel/plugin-proposal-export-namespace-from', { loose: true }],
   ],
 }

@@ -19,7 +19,10 @@
     "paths": {
       "@features/*": ["src/features/*"],
       "@redux": ["src/redux/index.ts"],
-      "@screens": ["src/screens/index.ts"]
+      "@screens": ["src/screens/index.ts"],
+      "@firebase-client": ["src/firebase-client/index.ts"],
+      "@services": ["src/services/index.ts"],
+      "@services/*": ["src/services/*"]
     },
     "baseUrl": "./"
   },

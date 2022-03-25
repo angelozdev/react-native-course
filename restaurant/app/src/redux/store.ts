@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+// reducers
+import dishesReducer from '@features/menu/dishes.slide'
+
 const store = configureStore({
-  reducer: {},
-  devTools: process.env.NODE_ENV !== 'production',
+  reducer: {
+    dishes: dishesReducer,
+  },
 })
 
 export default store
