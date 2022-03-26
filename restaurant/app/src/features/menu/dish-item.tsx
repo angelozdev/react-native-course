@@ -6,6 +6,7 @@ import {
   Heading,
   Box,
   Pressable,
+  View,
 } from 'native-base'
 import React from 'react'
 import { formatCurrency } from './utils'
@@ -32,29 +33,31 @@ export default function DishItem({
         <Box
           bg={isPressed ? 'gray.50' : 'white'}
           borderBottomWidth={1}
+          borderBottomColor="gray.200"
           p="4"
-          borderColor="gray.200"
           flex={1}
         >
-          <HStack space={3}>
-            {!!image && (
-              <Image
-                borderRadius={4}
-                alt={name}
-                resizeMode="cover"
-                accessibilityIgnoresInvertColors
-                source={{
-                  uri: image,
-                  width: 100,
-                  height: 100,
-                }}
-              />
-            )}
-            <VStack space={1}>
+          <HStack flexGrow={1} space={3}>
+            <View flexGrow={0}>
+              {!!image && (
+                <Image
+                  borderRadius={4}
+                  alt={name}
+                  resizeMode="cover"
+                  accessibilityIgnoresInvertColors
+                  source={{
+                    uri: image,
+                    width: 100,
+                    height: 100,
+                  }}
+                />
+              )}
+            </View>
+            <VStack flexGrow={1} maxW="3/4" space={1}>
               <Heading color="gray.700" fontSize="md">
                 {name}
               </Heading>
-              <Text numberOfLines={2} color="gray.500">
+              <Text numberOfLines={1} color="gray.500">
                 {description}
               </Text>
               <Text fontWeight="bold" color="orange.700">
