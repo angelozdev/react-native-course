@@ -33,7 +33,7 @@ export async function getDishes() {
   }
 }
 
-export async function getDishesRT({
+export function getDishesRT({
   onSuccess,
   onError,
   onFinally,

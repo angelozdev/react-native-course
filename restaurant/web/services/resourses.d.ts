@@ -7,3 +7,14 @@ export interface Dish {
   image: string | null;
   available: boolean;
 }
+
+export type CartItem = Dish & { quantity: number };
+
+export type Order = {
+  id: string;
+  items: CartItem[];
+  total: number;
+  createdAt: number;
+  status: "pending" | "delivered" | "cancelled";
+  count: number;
+};

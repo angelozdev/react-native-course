@@ -11,6 +11,7 @@ import { dishesService } from "services";
 import { useRouter } from "next/router";
 import { Routes } from "@constants";
 import { uploadImage } from "services/dishes";
+import { Unsubscribe } from "firebase/firestore";
 type Values = {
   name: string;
   price: number;
@@ -37,7 +38,7 @@ export default function AddDishForm() {
   const router = useRouter();
   const [isLoading, setIsloading] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
-  const unsubscribe = React.useRef<Function | void>();
+  const unsubscribe = React.useRef<Unsubscribe>(null);
 
   const handleChange = ({ target }: Event) => {
     const { value, name } = target;
@@ -70,9 +71,7 @@ export default function AddDishForm() {
   };
 
   React.useEffect(() => {
-    return () => {
-      unsubscribe.current && unsubscribe.current();
-    };
+    return () => unsubscribe.current?.();
   }, []);
 
   return (

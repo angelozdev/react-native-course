@@ -1,8 +1,7 @@
 import React from 'react'
 import { Heading, SectionList, View } from 'native-base'
-import { menuServices } from '@services'
-import { Unsubscribe } from 'firebase/firestore'
 
+import { menuServices } from '@services'
 import { useAppDispatch, useAppSelector } from '@redux'
 import {
   getDishesSuccessfully,
@@ -18,7 +17,6 @@ export default function MenuScreen() {
   } = useAppSelector((state) => state.dishes)
   const dispatch = useAppDispatch()
   const navigation = useNavigation<NavigationProp>()
-  const unsubscribe = React.useRef<Unsubscribe | null>(null)
 
   const onPressDish = React.useCallback(
     (dish: Dish) => {
@@ -28,18 +26,14 @@ export default function MenuScreen() {
   )
 
   React.useEffect(() => {
-    const getData = async () => {
-      unsubscribe.current = await menuServices.getDishesRT({
-        onSuccess: (newDishes) => {
-          dispatch(getDishesSuccessfully(newDishes))
-        },
-        onError: (error) => dispatch(getDishesWithError(error)),
-      })
-    }
+    const unsubscribe = menuServices.getDishesRT({
+      onSuccess: (newDishes) => {
+        dispatch(getDishesSuccessfully(newDishes))
+      },
+      onError: (error) => dispatch(getDishesWithError(error)),
+    })
 
-    getData()
-
-    return () => unsubscribe.current?.()
+    return () => unsubscribe?.()
   }, [dispatch])
 
   if (isLoading) {

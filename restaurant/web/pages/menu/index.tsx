@@ -10,18 +10,13 @@ import { Dish } from "services/resourses";
 
 export default function Menu() {
   const [dishes, setDishes] = React.useState<Dish[]>([]);
-  const unsubscribe = React.useRef(null);
 
   React.useEffect(() => {
-    (async () => {
-      unsubscribe.current = await dishesService.getAllRT({
-        onSuccess: setDishes,
-      });
-    })();
+    const unsubscribe = dishesService.getAllRT({
+      onSuccess: setDishes,
+    });
 
-    return () => {
-      unsubscribe.current && unsubscribe.current();
-    };
+    return () => unsubscribe();
   }, []);
 
   return (

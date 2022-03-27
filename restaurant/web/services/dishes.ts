@@ -44,7 +44,7 @@ export async function getAll(): Promise<Dish[]> {
   }
 }
 
-export async function getAllRT({
+export function getAllRT({
   onSuccess,
   onError,
 }: {
@@ -94,7 +94,10 @@ export function uploadImage(
     onProgress?: (progress: number) => void;
   } = {}
 ) {
-  if (!image) return onSuccess(null);
+  if (!image) {
+    onSuccess(null);
+    return;
+  }
 
   const uploadTask = uploadBytesResumable(
     ref(storage, "dishes/" + image.name),

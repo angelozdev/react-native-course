@@ -1,6 +1,7 @@
 import { Switch } from "@features/ui";
 import Image from "next/image";
 import { Dish } from "services/resourses";
+import { currencyUtils } from "utils";
 
 // types
 interface Props {
@@ -49,11 +50,7 @@ export default function DishItem({
           {name}
         </h4>
         <p className="text-sm font-medium text-yellow-900">
-          {price.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0,
-          })}
+          {currencyUtils.formatPrice(price)}
         </p>
       </div>
     </li>
