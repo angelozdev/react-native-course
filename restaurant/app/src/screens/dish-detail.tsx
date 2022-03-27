@@ -1,11 +1,25 @@
-import { formatCurrency } from '@features/menu/utils'
-import { View, Image, Heading, Text } from 'native-base'
 import React from 'react'
+import { View, Image, Heading, Text } from 'native-base'
 
-export default function DishDetailScreen({ route }: DishDetailProps) {
-  const { description, name, image, category, price } = route.params.dish
+import { useAppDispatch } from '@redux'
+import { AddToCartSection } from '@features/menu'
+import { formatCurrency } from '@features/menu/utils'
+import { addDishToCart } from '@features/cart/cart.slice'
+
+export default function DishDetailScreen(props: DishDetailProps) {
+  const { route, navigation } = props
+  const { dish } = route.params
+  const { description, name, image, category, price } = dish
+  const formattedPrice = formatCurrency(price)
+  const disptach = useAppDispatch()
+
+  const handleAddToCart = (quantity: number) => {
+    disptach(addDishToCart({ ...dish, quantity }))
+    navigation.navigate('Menu')
+  }
+
   return (
-    <View>
+    <View flexGrow={1}>
       {!!image && (
         <Image
           alt={name}
@@ -29,9 +43,13 @@ export default function DishDetailScreen({ route }: DishDetailProps) {
         </Heading>
         <Text>{description}</Text>
 
-        <Text fontSize="2xl" fontWeight="semibold" color="orange.700">
-          {formatCurrency(price)}
+        <Text fontSize="3xl" fontWeight="bold" color="orange.700">
+          {formattedPrice}
         </Text>
+      </View>
+
+      <View bg="white" left={0} right={0} p={4} position="absolute" bottom={0}>
+        <AddToCartSection onAddToCart={handleAddToCart} price={price} />
       </View>
     </View>
   )

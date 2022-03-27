@@ -1,5 +1,4 @@
 type Dish = {
-  available: boolean
   category: string
   description: string
   image: string | null
@@ -9,3 +8,4 @@ type Dish = {
 }
 
 type DishesGroupedByCategory = Record<string, Omit<Dish, 'category'>[]>
+type CartItem = Dish & { quantity: number }

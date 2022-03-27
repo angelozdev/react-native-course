@@ -6,9 +6,10 @@ type NavigationProp =
   import('@react-navigation/native').NavigationProp<RootStackParamList>
 
 type RootStackParamList = {
-  NewOrder: undefined
-  Menu: undefined
+  Basket: undefined
   DishDetail: { dish: Dish }
+  Menu: undefined
+  NewOrder: undefined
 }
 
 type NewOrderProps = StackScreenProps<'NewOrder'>

@@ -8,7 +8,7 @@ export default function NewOrderScreen({ navigation }: NewOrderProps) {
         onPress={() => navigation.navigate('Menu')}
         bg="teal.500"
         _pressed={{ bg: 'teal.600' }}
-        rounded="md"
+        rounded="full"
       >
         Crear nueva orden
       </Button>

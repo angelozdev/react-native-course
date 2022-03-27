@@ -9,8 +9,14 @@ import {
 import { NativeBaseProvider } from 'native-base'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { store } from './src/redux'
-import { MenuScreen, NewOrderScreen, DishDetailScreen } from '@screens'
+import { store } from '@redux'
+import {
+  MenuScreen,
+  NewOrderScreen,
+  DishDetailScreen,
+  BasketScreen,
+} from '@screens'
+import { DisplayNumberOfItems } from '@features/cart'
 
 const Stack = createStackNavigator<RootStackParamList>()
 
@@ -18,6 +24,7 @@ const screenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
   gestureEnabled: true,
+  headerRight: () => <DisplayNumberOfItems />,
 }
 
 function App() {
@@ -45,10 +52,21 @@ function App() {
                 title: route.params.dish.name,
                 headerTitleStyle: {
                   textTransform: 'uppercase',
+                  fontSize: 12,
+                  maxWidth: 200,
                 },
               })}
               name="DishDetail"
               component={DishDetailScreen}
+            />
+
+            <Stack.Screen
+              component={BasketScreen}
+              name="Basket"
+              options={{
+                title: 'Tu cesta',
+                headerRight: undefined,
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>

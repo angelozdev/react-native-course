@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@redux'
 import {
   getDishesSuccessfully,
   getDishesWithError,
-} from '@features/menu/dishes.slide'
+} from '@features/menu/dishes.slice'
 import { DishItem, DishListSkeleton } from '@features/menu'
 import { useNavigation } from '@react-navigation/native'
 
