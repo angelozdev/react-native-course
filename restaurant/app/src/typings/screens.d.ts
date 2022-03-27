@@ -9,8 +9,8 @@ type RootStackParamList = {
   Basket: undefined
   DishDetail: { dish: Dish }
   Menu: undefined
-  NewOrder: undefined
+  Orders: undefined
 }
 
-type NewOrderProps = StackScreenProps<'NewOrder'>
+type OrdersProps = StackScreenProps<'Orders'>
 type DishDetailProps = StackScreenProps<'DishDetail'>

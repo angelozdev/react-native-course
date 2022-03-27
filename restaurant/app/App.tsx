@@ -12,7 +12,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { store } from '@redux'
 import {
   MenuScreen,
-  NewOrderScreen,
+  OrdersScreen,
   DishDetailScreen,
   BasketScreen,
 } from '@screens'
@@ -34,9 +34,9 @@ function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
-              options={{ title: 'Nueva Orden' }}
-              name="NewOrder"
-              component={NewOrderScreen}
+              options={{ title: 'Órdenes' }}
+              name="Orders"
+              component={OrdersScreen}
             />
 
             <Stack.Screen

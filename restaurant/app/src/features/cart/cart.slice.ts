@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // types
-interface CartState {
-  items: Array<CartItem>
-  count: number
-}
 
 const initialState: CartState = {
   count: 0,
   items: [],
+  total: 0,
 }
 
 // utils
+const getTotal = (items: Array<CartItem>): number => {
+  return items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+}
 
 const { actions, reducer } = createSlice({
   name: 'cart',
@@ -19,41 +19,49 @@ const { actions, reducer } = createSlice({
   reducers: {
     addDishToCart: (state, { payload }: PayloadAction<CartItem>) => {
       const isAlreadyInCart = state.items.some((item) => item.id === payload.id)
-      if (!isAlreadyInCart) {
-        state.items.push(payload)
-        state.count++
-        return
-      }
 
-      const sumQuantitiesOfEqualItems = (item: CartItem) => {
-        if (item.id === payload.id) item.quantity += payload.quantity
-        return item
-      }
+      const newCart = isAlreadyInCart
+        ? state.items.map((item) => {
+            if (item.id === payload.id) {
+              item.quantity += payload.quantity
+              return item
+            }
+            return item
+          })
+        : [...state.items, payload]
 
-      state.items = state.items.map(sumQuantitiesOfEqualItems)
+      state.total = getTotal(newCart)
+      state.items = newCart
+      state.count = newCart.length
     },
     removeDishFromCart: (state, { payload }: PayloadAction<CartItem['id']>) => {
       const newCart = state.items.filter((item) => item.id !== payload)
+      state.total = getTotal(newCart)
       state.items = newCart
       state.count = newCart.length
     },
     increaseQuantity: (state, { payload }: PayloadAction<CartItem['id']>) => {
-      const item = state.items.find(({ id }) => id === payload)
-      if (item) item.quantity++
+      const newCart = state.items.map((item) => {
+        if (item.id === payload) item.quantity++
+        return item
+      })
+      state.total = getTotal(newCart)
+      state.items = newCart
     },
     decreaseQuantity: (state, { payload }: PayloadAction<CartItem['id']>) => {
-      const item = state.items.find(({ id }) => id === payload)
-      if (!item) return
-      const newQuantity = item?.quantity - 1
-      if (newQuantity === 0) {
-        state.items = state.items.filter(({ id }) => id !== payload)
-        state.count--
-      }
-      if (newQuantity > 0) item.quantity = newQuantity
+      const newCart = state.items.filter((item) => {
+        if (item.id === payload) item.quantity--
+        return item.quantity > 0
+      })
+
+      state.total = getTotal(newCart)
+      state.items = newCart
+      state.count = newCart.length
     },
     emptyCart: (state) => {
       state.items = []
       state.count = 0
+      state.total = 0
     },
   },
 })

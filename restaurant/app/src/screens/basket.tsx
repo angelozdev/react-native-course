@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function Basket() {
   return (
-    <View>
+    <View flexGrow={1}>
       <CartList />
     </View>
   )

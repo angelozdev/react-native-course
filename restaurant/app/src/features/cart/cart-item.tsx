@@ -12,8 +12,10 @@ import {
 import Feather from 'react-native-vector-icons/Feather'
 import { increaseQuantity, decreaseQuantity } from '@features/cart/cart.slice'
 import { useAppDispatch } from '@redux'
+import { useNavigation } from '@react-navigation/native'
 
 export default function CartItem(props: CartItem) {
+  const navigation = useNavigation<NavigationProp>()
   const dispatch = useAppDispatch()
   const { name, image, price, id, quantity } = props
   const formattedPrice = formatCurrency(price * quantity)
@@ -28,7 +30,11 @@ export default function CartItem(props: CartItem) {
       flexGrow={1}
     >
       <HStack space={4}>
-        <View>
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => navigation.navigate('DishDetail', { dish: props })}
+          _pressed={{ opacity: 0.8, shadow: '2' }}
+        >
           {!!image && (
             <Image
               rounded="lg"
@@ -41,7 +47,7 @@ export default function CartItem(props: CartItem) {
               }}
             />
           )}
-        </View>
+        </Pressable>
 
         <VStack flexGrow={1} justifyContent="center">
           <Text>{name}</Text>
