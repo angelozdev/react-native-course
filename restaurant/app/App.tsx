@@ -15,6 +15,7 @@ import {
   OrdersScreen,
   DishDetailScreen,
   BasketScreen,
+  OrderDetailScreen,
 } from '@screens'
 import { DisplayNumberOfItems } from '@features/cart'
 
@@ -67,6 +68,14 @@ function App() {
                 title: 'Tu cesta',
                 headerRight: undefined,
               }}
+            />
+
+            <Stack.Screen
+              options={{
+                title: 'Detalle de la orden',
+              }}
+              name="OrderDetail"
+              component={OrderDetailScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>

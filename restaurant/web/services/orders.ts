@@ -6,6 +6,8 @@ import {
   onSnapshot,
   query,
   where,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import { Order } from "./resourses";
 
@@ -20,7 +22,7 @@ const ordersCollectin = collection(db, "orders") as CollectionReference<Order>;
 
 // services
 export function getAllRT({ onNext, onError }: GetAllRTParams) {
-  const q = query(ordersCollectin, where("status", "!=", "delivered"));
+  const q = query(ordersCollectin);
   const unsubscribe = onSnapshot(
     q,
     (snapshot) => {
@@ -37,4 +39,14 @@ export function getAllRT({ onNext, onError }: GetAllRTParams) {
   );
 
   return unsubscribe;
+}
+
+export async function updateById(id: string, data: Partial<Order>) {
+  try {
+    const orderPath = doc(ordersCollectin, id);
+    await updateDoc(orderPath, { ...data, updatedAt: Date.now() });
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
 }

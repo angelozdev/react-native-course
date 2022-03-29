@@ -16,12 +16,24 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
+  const handleUpdateOrder = React.useCallback(
+    async (id: Order["id"], data: Partial<Order>) => {
+      await ordersService.updateById(id, data);
+    },
+    []
+  );
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-semibold">Orders</h1>
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
         {orders.map((order, index) => (
-          <OrderItem key={order.id} index={index + 1} {...order} />
+          <OrderItem
+            key={order.id}
+            onUpdate={handleUpdateOrder}
+            index={index + 1}
+            {...order}
+          />
         ))}
       </ul>
     </div>

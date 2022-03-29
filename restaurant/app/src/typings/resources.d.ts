@@ -15,6 +15,7 @@ type Order = {
   items: CartItem[]
   total: number
   createdAt: number
+  updatedAt: number
   status: 'pending' | 'delivered' | 'cancelled'
   count: number
 }

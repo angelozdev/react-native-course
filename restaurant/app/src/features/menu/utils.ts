@@ -16,3 +16,13 @@ export function formatCurrency(currency: number) {
     minimumFractionDigits: 0,
   })
 }
+
+export function formatDate(date: Date | number) {
+  return new Date(date).toLocaleString('es-ES', {
+    year: '2-digit',
+    month: '2-digit',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  })
+}

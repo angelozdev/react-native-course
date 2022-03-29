@@ -1,20 +1,49 @@
 // types
 import Image from "next/image";
+import { ChangeEvent } from "react";
 import type { Order, CartItem } from "services/resourses";
 import { currencyUtils } from "utils";
+import { colorsByStatus } from "./utils";
 interface Props extends Order {
   index: number;
+  onUpdate: (id: Order["id"], data: Partial<Order>) => void;
 }
 
-export default function OrderItem({ index, count, items, total }: Props) {
+export default function OrderItem(props: Props) {
+  const { index, count, items, total, status, id, onUpdate } = props;
+
+  const handleChangeStatus = (event: ChangeEvent<HTMLSelectElement>) => {
+    const status = event.target.value as any;
+    onUpdate(id, { status });
+  };
+
   return (
-    <li className="border shadow-sm">
+    <li className={`border shadow-sm`}>
       <div className="p-4 pb-0">
         <div className="flex justify-between">
           <h3 className="font-semibold">Order #{index}</h3>
           <span className="text-gray-600">{count} items</span>
         </div>
-        <span>Total: {currencyUtils.formatPrice(total)}</span>
+        <div className="flex justify-between w-full mt-2">
+          <span>Total: {currencyUtils.formatPrice(total)}</span>
+
+          <select
+            onChange={handleChangeStatus}
+            className={`p-1 rounded-md cursor-pointer bg-white border ${colorsByStatus[status]}`}
+            value={status}
+            name="status"
+          >
+            <option className="text-black" value="pending">
+              Pending
+            </option>
+            <option className="text-black" value="delivered">
+              Delivered
+            </option>
+            <option className="text-black" value="cancelled">
+              Cancelled
+            </option>
+          </select>
+        </div>
       </div>
 
       <details open>

@@ -17,4 +17,5 @@ export type Order = {
   createdAt: number;
   status: "pending" | "delivered" | "cancelled";
   count: number;
+  updatedAt: number;
 };

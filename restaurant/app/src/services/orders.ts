@@ -65,6 +65,7 @@ export async function addOrder(cart: CartState) {
       status: 'pending',
       total: cart.total,
       count: cart.count,
+      updatedAt: Date.now(),
     }
     const orderRef = await addDoc(orderCollection, order)
     return orderRef.id

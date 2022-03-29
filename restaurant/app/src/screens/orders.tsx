@@ -1,4 +1,4 @@
-import { formatCurrency } from '@features/menu/utils'
+import { OrderItem } from '@features/orders'
 import {
   gettingOrders,
   gotOrdersSuccessfully,
@@ -6,7 +6,7 @@ import {
 } from '@features/orders/orders.slice'
 import { useAppDispatch, useAppSelector } from '@redux'
 import { ordersServices } from '@services'
-import { View, Button, FlatList, Text, Box } from 'native-base'
+import { View, Button, FlatList } from 'native-base'
 import React from 'react'
 
 export default function Orders({ navigation }: OrdersProps) {
@@ -22,30 +22,19 @@ export default function Orders({ navigation }: OrdersProps) {
 
     return () => unsubscribe()
   }, [dispatch])
-
   return (
     <View>
       <FlatList
         data={data.orders}
         keyExtractor={({ id }) => id}
         renderItem={({ item, index }) => (
-          <Box
-            p={4}
-            bg="white"
-            borderBottomWidth={1}
-            borderBottomColor="gray.100"
-          >
-            <Text>{index + 1}</Text>
-            <View>
-              {item.items.map(({ name, id }) => (
-                <Text key={id}>{name}</Text>
-              ))}
-            </View>
-
-            <Text>{formatCurrency(item.total)}</Text>
-          </Box>
+          <OrderItem
+            onPress={() => navigation.navigate('OrderDetail', { order: item })}
+            index={index + 1}
+            {...item}
+          />
         )}
-        ListFooterComponent={() => (
+        ListHeaderComponent={() => (
           <View p={4}>
             <Button
               onPress={() => navigation.navigate('Menu')}
