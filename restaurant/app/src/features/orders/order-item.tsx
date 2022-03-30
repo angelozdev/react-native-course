@@ -1,17 +1,12 @@
 import React from 'react'
 import { formatCurrency } from '@features/menu/utils'
 import { View, Text, Box, Pressable, Image, HStack } from 'native-base'
+import { colorByStatus } from './utils'
 
 // types
 interface Props extends Order {
   index: number
   onPress: () => void
-}
-
-const colorByStatus = {
-  pending: '#ffc107',
-  delivered: '#28a745',
-  cancelled: '#dc3545',
 }
 
 export default function OrderItem(props: Props) {
@@ -21,7 +16,7 @@ export default function OrderItem(props: Props) {
       {({ isPressed }) => (
         <Box
           p={4}
-          bg={isPressed ? 'gray.100' : 'white'}
+          bg={isPressed ? 'gray.50' : 'white'}
           borderBottomWidth={1}
           borderBottomColor="gray.100"
         >

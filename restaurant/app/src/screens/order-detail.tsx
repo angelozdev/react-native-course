@@ -1,11 +1,23 @@
 import React from 'react'
 import { View, Text, Image, HStack, VStack } from 'native-base'
 import { formatCurrency, formatDate } from '@features/menu/utils'
+import { ordersServices } from '@services'
+import { colorByStatus } from '../features/orders/utils'
 
 export default function OrderDetailScreen(props: OrderDetailProps) {
-  const { route } = props
+  const { route, navigation } = props
   const { order } = route.params
-  const { items, total, updatedAt, createdAt } = order
+  const { items, total, updatedAt, createdAt, id, status } = order
+
+  React.useEffect(() => {
+    const unsubscribe = ordersServices.getByIdRT(id, {
+      onNext: (orderFromServer) =>
+        navigation.setParams({ order: orderFromServer || order }),
+    })
+
+    return () => unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <View>
@@ -13,12 +25,21 @@ export default function OrderDetailScreen(props: OrderDetailProps) {
         <Text fontSize="sm" fontWeight="bold">
           {items.length} items
         </Text>
+
+        <Text
+          color={colorByStatus[status]}
+          textTransform="uppercase"
+          fontSize="xs"
+          fontWeight="bold"
+        >
+          {status}
+        </Text>
       </View>
 
       <View>
-        {items.map(({ id, name, image, price, quantity, category }) => (
+        {items.map(({ id: itemId, name, image, price, quantity, category }) => (
           <View
-            key={id}
+            key={itemId}
             p={4}
             bg="white"
             borderBottomWidth={1}

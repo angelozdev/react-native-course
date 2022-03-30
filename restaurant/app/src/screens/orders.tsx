@@ -1,6 +1,5 @@
-import { OrderItem } from '@features/orders'
+import { OrderItem, OrderListSkeleton } from '@features/orders'
 import {
-  gettingOrders,
   gotOrdersSuccessfully,
   gotOrdersWithError,
 } from '@features/orders/orders.slice'
@@ -11,17 +10,18 @@ import React from 'react'
 
 export default function Orders({ navigation }: OrdersProps) {
   const dispatch = useAppDispatch()
-  const { data } = useAppSelector((state) => state.orders)
+  const { data, isLoading } = useAppSelector((state) => state.orders)
 
   React.useEffect(() => {
-    dispatch(gettingOrders())
     const unsubscribe = ordersServices.getAllRT({
       onNext: (orders) => dispatch(gotOrdersSuccessfully(orders)),
       onError: (error) => dispatch(gotOrdersWithError(error)),
     })
-
     return () => unsubscribe()
   }, [dispatch])
+
+  if (isLoading) return <OrderListSkeleton numberOfItems={4} />
+
   return (
     <View>
       <FlatList
