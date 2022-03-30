@@ -1,4 +1,5 @@
 // types
+import { Button } from "@features/ui";
 import Image from "next/image";
 import { ChangeEvent } from "react";
 import type { Order, CartItem } from "services/resourses";
@@ -7,10 +8,11 @@ import { colorsByStatus } from "./utils";
 interface Props extends Order {
   index: number;
   onUpdate: (id: Order["id"], data: Partial<Order>) => void;
+  onDelete?: (id: Order["id"]) => void;
 }
 
 export default function OrderItem(props: Props) {
-  const { index, count, items, total, status, id, onUpdate } = props;
+  const { index, count, items, total, status, id, onUpdate, onDelete } = props;
 
   const handleChangeStatus = (event: ChangeEvent<HTMLSelectElement>) => {
     const status = event.target.value as any;
@@ -44,9 +46,14 @@ export default function OrderItem(props: Props) {
             </option>
           </select>
         </div>
+        {onDelete && (
+          <Button onClick={() => onDelete(id)} color="danger">
+            Delete
+          </Button>
+        )}
       </div>
 
-      <details open>
+      <details>
         <summary className="cursor-pointer p-4">Items</summary>
         <ul>
           {items.map((item) => (

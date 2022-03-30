@@ -3,7 +3,7 @@
 }
 
 .text {
-  @apply px-1;
+  @apply px-2;
 }
 
 .primary {

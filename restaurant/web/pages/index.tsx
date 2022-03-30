@@ -23,6 +23,12 @@ export default function Home() {
     []
   );
 
+  const handleDeleteOrder = React.useCallback(async (id: Order["id"]) => {
+    const deleteOrder = confirm("Are you sure?");
+    if (!deleteOrder) return;
+    await ordersService.deleteById(id);
+  }, []);
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-semibold">Orders</h1>
@@ -31,6 +37,7 @@ export default function Home() {
           <OrderItem
             key={order.id}
             onUpdate={handleUpdateOrder}
+            onDelete={handleDeleteOrder}
             index={index + 1}
             {...order}
           />
